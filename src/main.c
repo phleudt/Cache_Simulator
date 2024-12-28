@@ -234,7 +234,7 @@ static Cache *set_cache_configuration(const int argc, const char *argv[]) {
  */
 static void process_trace_line(const char access_type, const unsigned long address, const int instructions,
                                Cache *cache, TraceStats *trace_stats) {
-	const CacheOp *cache_op = initialize_cache_operation(access_type, address, instructions);
+	const CacheOp cache_op = initialize_cache_operation(access_type, address, instructions);
 
     // Handling cache accesses
 	if (access_type == 'l') {
@@ -246,7 +246,7 @@ static void process_trace_line(const char access_type, const unsigned long addre
 	}
 
 	// Simulate cache access
-	if (!access_cache(cache, cache_op)) {
+	if (!access_cache(cache, &cache_op)) {
 		// If cache miss, add miss penalty to cycle count
 		trace_stats->cycle_count += cache->miss_penalty;
 	}

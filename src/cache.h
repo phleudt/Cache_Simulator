@@ -93,9 +93,9 @@ void free_cache(Cache *cache);
  * @param access_type Either 'l' for LOAD or 's' for STORE.
  * @param address A virtual address.
  * @param instructions Number of instructions performed in cache operation.
- * @return Pointer to the initialized CacheOp object.
+ * @return The initialized CacheOp object.
  */
-CacheOp* initialize_cache_operation(char access_type, unsigned long address, int instructions);
+CacheOp initialize_cache_operation(char access_type, unsigned long address, int instructions);
 
 /**
  * @brief Simulates a cache access operation (LOAD or STORE).
@@ -110,6 +110,7 @@ bool access_cache(Cache *cache, const CacheOp *cache_op);
 /**
  * @brief Returns the number of cache hits that have occurred.
  *
+ * @param cache Pointer to the Cache object.
  * @return The number of cache hits.
  */
 int get_cache_hits(const Cache *cache);
@@ -117,6 +118,7 @@ int get_cache_hits(const Cache *cache);
 /**
  * @brief Returns the number of cache misses that have occurred.
  *
+ * @param cache Pointer to the Cache object.
  * @return The number of cache misses.
  */
 int get_cache_misses(const Cache *cache);
@@ -124,6 +126,7 @@ int get_cache_misses(const Cache *cache);
 /**
  * @brief Returns the number of dirty write-backs that have occurred.
  *
+ * @param cache Pointer to the Cache object.
  * @return The number of dirty write-backs.
  */
 int get_dirty_write_backs(const Cache *cache);

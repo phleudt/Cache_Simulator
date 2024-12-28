@@ -78,17 +78,6 @@ static int log2(int n) {
 
 // --- Cache Initialization and Cleanup ---
 
-/**
- * @brief Initializes the cache based on configuration parameters
- * such as associativity, cache size, line size, and penalty cycles.
- *
- * @param associativity Cache associativity (ways per set, or 0 for fully associative).
- * @param cache_size Cache size in KB.
- * @param line_size Cache line size in bytes.
- * @param miss_penalty Miss penalty in cycles.
- * @param dirty_wb_penalty Dirty write-back penalty in cycles.
- * @return Pointer to the initialized Cache object
- */
 Cache* initialize_cache(const int associativity, const int cache_size, const int line_size, const int miss_penalty,
                 const int dirty_wb_penalty) {
     Cache *cache = (Cache *)malloc(sizeof(Cache));
@@ -129,11 +118,6 @@ Cache* initialize_cache(const int associativity, const int cache_size, const int
     return cache;
 }
 
-/**
- * @brief Frees the memory allocated for the cache and its components.
- *
- * @param cache Pointer to the cache object to be deallocated.
- */
 void free_cache(Cache *cache) {
     for (int i = 0; i < cache->num_sets; i++) {
         free(cache->sets[i].lines); // Free line in each set
@@ -144,25 +128,13 @@ void free_cache(Cache *cache) {
 
 // --- Initialize Cache Operations ---
 
-/**
- * @brief Initializes a cache operation with the given parameters.
- *
- * @param access_type Either 'l' for LOAD or 's' for STORE.
- * @param address The memory address being accessed.
- * @param instructions Number of instructions performed in the cache operation.
- * @return Pointer to the initialized CacheOp object.
- */
-CacheOp *initialize_cache_operation(const char access_type, const unsigned long address, const int instructions) {
-    CacheOp *cache_op = (CacheOp *)malloc(sizeof(CacheOp));
-    if (!cache_op) {
-        fprintf(stderr, "Failed to allocate memory for cache operation.\n");
-        exit(EXIT_FAILURE);
-    }
+CacheOp initialize_cache_operation(const char access_type, const unsigned long address, const int instructions) {
+    CacheOp cache_op;
 
     // Set cache operation parameters
-    cache_op->access_type = access_type;
-    cache_op->address = address;
-    cache_op->instructions = instructions;
+    cache_op.access_type = access_type;
+    cache_op.address = address;
+    cache_op.instructions = instructions;
 
     return cache_op;
 }
@@ -305,13 +277,6 @@ static void handle_cache_miss(Cache *cache, const CacheOp *cache_op, const int s
     update_lru_order(cache, set_index, lru_index);
 }
 
-/**
- * @brief Simulates a cache access operation (LOAD or STORE). Checks for a cache hit or miss.
- *
- * @param cache Pointer to the Cache object.
- * @param cache_op Pointer to the CacheOp object representing the cache operation.
- * @return `true` if the access is a hit, `false` if it's a miss.
- */
 bool access_cache(Cache *cache, const CacheOp *cache_op) {
     const int set_index = extract_set_index(cache_op->address, cache);
 
@@ -334,32 +299,14 @@ bool access_cache(Cache *cache, const CacheOp *cache_op) {
 
 // --- Cache Statistics ---
 
-/**
- * @brief Retrieves the number of cache hits recorded during the simulation.
- *
- * @param cache Pointer to the Cache object.
- * @return The number of cache hits.
- */
 int get_cache_hits(const Cache *cache) {
     return cache->stats.hits;
 }
 
-/**
- * @brief Retrieves the number of cache misses recorded during the simulation.
- *
- * @param cache Pointer to the Cache object.
- * @return The number of cache misses.
- */
 int get_cache_misses(const Cache *cache) {
     return cache->stats.misses;
 }
 
-/**
- * @brief Retrieves the number of dirty write-backs recorded during the simulation.
- *
- * @param cache Pointer to the Cache object.
- * @return The number of dirty write-backs.
- */
 int get_dirty_write_backs(const Cache *cache) {
     return cache->stats.dirty_write_backs;
 }
