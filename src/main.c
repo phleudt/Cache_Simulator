@@ -190,21 +190,29 @@ static Cache *set_cache_configuration(const int argc, const char *argv[]) {
 
 	// Parse command line arguments
 	for (int i = 1; i < argc - 1; i++) {
+        char *endptr;
+
 		if (strcmp(argv[i], "-a") == 0 && i + 1 < argc) {
-			associativity = atoi(argv[++i]);
+            associativity = strtol(argv[++i], &endptr, 10);
 		} else if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
-			line_size = atoi(argv[++i]);
+			line_size = strtol(argv[++i], &endptr, 10);
 		} else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) {
-			cache_size = atoi(argv[++i]);
+			cache_size = strtol(argv[++i], &endptr, 10);
 		} else if (strcmp(argv[i], "-p") == 0 && i + 1 < argc) {
-			miss_penalty = atoi(argv[++i]);
+			miss_penalty = strtol(argv[++i], &endptr, 10);
 		} else if (strcmp(argv[i], "-d") == 0 && i + 1 < argc) {
-			dirty_wb_penalty = atoi(argv[++i]);
+			dirty_wb_penalty = strtol(argv[++i], &endptr, 10);
 		} else {
 			fprintf(stderr, "Invalid option or missing argument: %s.\n", argv[i]);
 			printUsage(argv[0]);
 			exit(EXIT_FAILURE);
 		}
+
+        if (*endptr != '\0') {
+            fprintf(stderr, "Invalid numeric value for %s: %s\n", argv[i - 1], argv[i]);
+            printUsage(argv[0]);
+            exit(EXIT_FAILURE);
+        }
 	}
 
 	// Validate the input parameters
